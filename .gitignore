@@ -10,7 +10,10 @@ env/
 # 环境变量（★ 最重要，绝不能上传）
 .env
 .env.local
+.env.*.local
 *.env
+# 但不忽略 .env.example
+!.env.example
 
 # IDE
 .vscode/
@@ -27,3 +30,5 @@ Thumbs.db
 
 # Docker
 docker-compose.override.yml
+
+历史代码/
