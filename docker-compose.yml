@@ -1,0 +1,36 @@
+
+
+services:
+  # Redis 服务
+  redis:
+    image: redis:7-alpine
+    container_name: agent-redis
+    ports:
+      - "32768:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # FastAPI Agent 服务
+  agent:
+    build: .
+    container_name: agent-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # ★ 关键：容器内访问 Redis 用"服务名"，不是 localhost
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - TZ=Asia/Shanghai
+    volumes:
+      # 挂载知识库和缓存文件，方便修改
+      - ./knowledge_base:/app/knowledge_base
+      - ./static:/app/static
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+volumes:
+  redis_data:
